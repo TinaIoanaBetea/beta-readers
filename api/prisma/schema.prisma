@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  // cover       String[]
+  book        String[]
+  genre       Genre
+  author      String
+  age         Age
+  words       Int
+  description String
+  createdAt   DateTime    @default(now())
+  user        User        @relation(fields: [userId], references: [id])
+  userId      String      @db.ObjectId
+  postDetail  PostDetail?
+}
+
+enum Genre {
+  fantasy
+  romance
+  police
+  sf
+  historical
+  mistery
+  horror
+  aventure
+  poetry
+}
+
+enum Age {
+  baby
+  teenager
+  youngadult
+  adult
+}
+
+model PostDetail {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  tropes   String
+  extra    String?
+  feedback String?
+  post     Post    @relation(fields: [postId], references: [id])
+  postId   String  @unique @db.ObjectId
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  username  String   @unique
+  password  String
+  avatar    String?
+  createdAt DateTime @default(now())
+  posts     Post[]
+  chats     Chat[]   @relation(fields: [chatIDs], references: [id])
+  chatIDs   String[] @db.ObjectId
+}
+
+model Chat {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  users       User[]    @relation(fields: [userIDs], references: [id])
+  userIDs     String[]  @db.ObjectId
+  createdAt   DateTime  @default(now())
+  seenBy      String[]  @db.ObjectId
+  messages    Message[]
+  lastMessage String?
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
+  userId    String
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  chatId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+}

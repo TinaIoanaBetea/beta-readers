@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@prisma/client": "^5.15.0",
+    "axios": "^1.7.2",
+    "bcrypt": "^5.1.1",
+    "prisma": "^5.15.0",
+    "react-router-dom": "^6.23.1",
+    "sass": "^1.77.2"
+  }
+}
